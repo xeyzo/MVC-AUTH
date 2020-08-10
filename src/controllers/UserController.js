@@ -1,4 +1,6 @@
-const { user, post } = require("../models");
+const jwt = require("jsonwebtoken");
+const accessTokenSecret = process.env.JWT_SECRET_KEY;
+const { user } = require("../models");
 
 const response = {
   status: true,
@@ -107,7 +109,40 @@ static async getUser(req, res){
           res.status(400).json(response);
       }
   }
+
+  static async login(req, res) {
+    const { username, email } = req.body;
+    const u = await user.findOne({
+      where: {
+        username,
+      },
+      raw: true,
+    });
+
+    if (u) {
+      const accessToken = jwt.sign(
+        { username: u.username, email: user.email, id: u.id },
+        accessTokenSecret
+      );
+
+      res.json({
+        message: "Success login",
+        status: "success",
+        data: {
+          ...u,
+          accessToken,
+        },
+      });
+    } else {
+      res.json({
+        e: "no data",
+      });
+    }
+    res.json({ username, email, u });
+  }
 }
+
+
 
 
 module.exports = UserController;

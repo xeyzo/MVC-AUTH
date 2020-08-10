@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const authenticateJWT = require("../auth");
+
 
 const UsersController = require("../controllers/UserController");
 
-router.get("/", UsersController.getUser);
+router.get("/",authenticateJWT, UsersController.getUser);
 router.post("/", UsersController.saveUser);
 
 router.get("/:id", UsersController.getUserId);
