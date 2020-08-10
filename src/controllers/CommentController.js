@@ -1,4 +1,4 @@
-const { post } = require("../models");
+const { comment } = require("../models");
 
 const response = {
   data: [],
@@ -26,7 +26,7 @@ class CommentController {
   static async getComment(req, res) {
     try {
       const allComment = await comment.findAll({});
-      if (allPost.length !== 0) {
+      if (allComment.length !== 0) {
           response.data = allComment;
           response.message = "succes"
           res.status(200).json(response);
@@ -47,7 +47,7 @@ class CommentController {
   static async saveComment(req, res) {
     const { body } = req;
     try {
-      const insert = await post.create({
+      const save = await comment.create({
         content:body.content,
         status:body.status,
         userId:body.userId,
@@ -55,9 +55,8 @@ class CommentController {
         url:body.url,
         postId:body.postId
       });
-      response.data = insert;
+      response.data = save;
       response.message = "Succes save data";
-
       res.status(201).json(response);
     } catch (error) {
       response.data = [];
